@@ -40,6 +40,10 @@ let ballSpeedY = 1;
 let leftPaddleY = (canvas.height - paddleHeight) / 2;
 let rightPaddleY = (canvas.height - paddleHeight) / 2;
 
+// Add variables to track the pressed keys
+let upArrowPressed = false;
+let downArrowPressed = false;
+
 function drawBall() {
     ctx.beginPath();
     ctx.arc(ballX, ballY, ballRadius, 0, Math.PI * 2);
@@ -58,7 +62,7 @@ function drawPaddle(x, y) {
 
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
+
     ballX += ballSpeedX;
     ballY += ballSpeedY;
 
@@ -72,12 +76,39 @@ function draw() {
 
     leftPaddleY += (ballY - (leftPaddleY + paddleHeight / 2)) * 0.1;
 
+    // Update the right paddle's position based on the pressed keys
+    if (upArrowPressed && rightPaddleY > 0) {
+        rightPaddleY -= 5;
+    }
+
+    if (downArrowPressed && rightPaddleY < canvas.height - paddleHeight) {
+        rightPaddleY += 5;
+    }
+
     drawBall();
     drawPaddle(0, leftPaddleY);
     drawPaddle(canvas.width - paddleWidth, rightPaddleY);
 }
 
+// Add event listeners for keydown and keyup events
+document.addEventListener('keydown', (event) => {
+    if (event.code === 'ArrowUp') {
+        upArrowPressed = true;
+    } else if (event.code === 'ArrowDown') {
+        downArrowPressed = true;
+    }
+});
+
+document.addEventListener('keyup', (event) => {
+    if (event.code === 'ArrowUp') {
+        upArrowPressed = false;
+    } else if (event.code === 'ArrowDown') {
+        downArrowPressed = false;
+    }
+});
+
 setInterval(draw, 1000 / 60);
+
 
     </script>
 </body>
